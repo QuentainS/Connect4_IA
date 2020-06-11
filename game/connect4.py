@@ -22,6 +22,10 @@ class Game():
         # Check if the case is empty
         if self.map[y][x] != 0:
             raise Exception("Case not empty")
+        elif x < 0 or x >= self.width:
+            raise Exception("Wrong index : x={} is not correct".format(x))
+        elif y < 0 or y >= self.height:
+            raise Exception("Wrong index : y={} is not correct".format(y))
 
         # Check if the move is feasible
         # (if the case below the target is not empty)
@@ -44,30 +48,67 @@ class Game():
         # Get the amount of discs (of this player)
         # on the left
         left = 0
-        for i in range(x-1, -1, -1):
-            if self.map[y][i] == player:
-                left += 1
-            else:
-                break
+        i = x - 1
+        while i >= 0 and self.map[y][i] == player:
+            left += 1
+            i -= 1
 
         # on the right
         right = 0
-        for i in range(x+1, self.width):
-            if self.map[y][i] == player:
-                right += 1
-            else:
-                break
+        i = x + 1
+        while i < self.width and self.map[y][i] == player:
+            right += 1
+            i += 1
 
         # down
         down = 0
-        for i in range(y+1, self.height):
-            if self.map[i][x] == player:
-                down += 1
-            else:
-                break
+        j = y + 1
+        while j < self.height and self.map[j][x] == player:
+            down += 1
+            j += 1
+
+        # up-left diagonal
+        up_left = 0
+        i = x - 1
+        j = y - 1
+        while i >= 0 and j >= 0 and self.map[j][i] == player:
+            up_left += 1
+            i -= 1
+            j -= 1
+
+        # up-right diagonal
+        up_right = 0
+        i = x + 1
+        j = y - 1
+        while i < self.width and j >= 0 and self.map[j][i] == player:
+            up_right += 1
+            i += 1
+            j -= 1
+
+        # down-left diagonal
+        down_left = 0
+        i = x - 1
+        j = y + 1
+        while i >= 0 and j < self.height and self.map[j][i] == player:
+            down_left += 1
+            i -= 1
+            j += 1
+
+        # down-right diagonal
+        down_right = 0
+        i = x + 1
+        j = y + 1
+        while i < self.width and j < self.height and self.map[j][i] == player:
+            down_right += 1
+            i += 1
+            j += 1
+
+        horizontal = left + right
+        diagonal_1 = up_left + down_right
+        diagonal_2 = up_right + down_left
 
         # If 3 adjacents disk => Connect 4 !
-        return left+right == 3 or down == 3
+        return horizontal == 3 or down == 3 or diagonal_1 == 3 or diagonal_2 == 3
 
     def is_tie(self):
         return self.used_discs == self.width * self.height
