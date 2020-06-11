@@ -1,3 +1,6 @@
+import pickle
+
+
 class Game():
     def __init__(self, width, height):
         # Setup the size of the game
@@ -21,7 +24,9 @@ class Game():
             raise Exception("Case not empty")
 
         # Check if the move is feasible
-        # TODO
+        # (if the case below the target is not empty)
+        if y != (self.height - 1) and self.map[y+1][x] == 0:
+            raise Exception("Your disc can't levitate...")
 
         self.map[y][x] = player
 
@@ -49,6 +54,8 @@ class Match():
         # -1 if this is tie
         self.winner = 0
 
+        self.states = [self.get_state()]
+
     def play(self, player, coord):
 
         if (self.turn % 2) + 1 != player:
@@ -60,8 +67,8 @@ class Match():
             # Add the disc
             try:
                 self.winner = self.game.set_disc(player, coord)
-            except:
-                print("Move not allowed")
+            except Exception as e:
+                raise e
 
             if self.winner != 0:
                 if self.winner == player:
@@ -70,9 +77,14 @@ class Match():
                     print("This is a tie...")
 
             self.turn += 1
+            self.states.append(self.get_state())
 
     def get_state(self):
         return {'map': self.game.get_map(), 'turn': self.turn, 'winner': self.winner}
+
+    def save(self, path):
+        with open(path, 'wb') as f:
+            pickle.dump(self.states, f)
 
     def show(self):
         width, height, game_map = self.game.get_map()
@@ -80,11 +92,3 @@ class Match():
             for x in range(width):
                 print(game_map[y][x], end=' ')
             print('\n')
-
-
-match = Match(5, 5)
-print(match.get_state())
-match.show()
-match.play(1, (1, 1))
-match.show()
-match.play(2, (1, 2))
