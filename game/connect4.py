@@ -33,11 +33,41 @@ class Game():
         self.used_discs += 1
 
         # Check if this a is a win-move
-        # TODO
-
-        if self.is_tie():
+        if self.is_win_move(x, y, player):
+            return player
+        elif self.is_tie():
             return -1
         return 0
+
+    def is_win_move(self, x, y, player):
+
+        # Get the amount of discs (of this player)
+        # on the left
+        left = 0
+        for i in range(x-1, -1, -1):
+            if self.map[y][i] == player:
+                left += 1
+            else:
+                break
+
+        # on the right
+        right = 0
+        for i in range(x+1, self.width):
+            if self.map[y][i] == player:
+                right += 1
+            else:
+                break
+
+        # down
+        down = 0
+        for i in range(y+1, self.height):
+            if self.map[i][x] == player:
+                down += 1
+            else:
+                break
+
+        # If 3 adjacents disk => Connect 4 !
+        return left+right == 3 or down == 3
 
     def is_tie(self):
         return self.used_discs == self.width * self.height
@@ -58,7 +88,9 @@ class Match():
 
     def play(self, player, coord):
 
-        if (self.turn % 2) + 1 != player:
+        if self.winner != 0:
+            print("Game is finished !")
+        elif (self.turn % 2) + 1 != player:
             print("It is the turn of player {}!".format((self.turn % 2) + 1))
         else:
 
@@ -81,6 +113,9 @@ class Match():
 
     def get_state(self):
         return {'map': self.game.get_map(), 'turn': self.turn, 'winner': self.winner}
+
+    def get_all_states(self):
+        return self.states
 
     def save(self, path):
         with open(path, 'wb') as f:
