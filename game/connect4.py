@@ -162,6 +162,9 @@ class Match():
         with open(path, 'wb') as f:
             pickle.dump(self.states, f)
 
+    def get_turn(self):
+        return self.turn
+
     def show(self):
         width, height, game_map = self.game.get_map()
         for y in range(height):
