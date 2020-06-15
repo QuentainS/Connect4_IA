@@ -1,5 +1,6 @@
 import socket
 import ast
+from bot import compute_move
 
 
 class Client():
@@ -10,6 +11,7 @@ class Client():
         self.pseudo = pseudo
         self.conn_state = 0
         self.player_number = 0
+        self.history = []
 
     def get_player_number(self):
         return self.player_number
@@ -62,6 +64,14 @@ class Client():
         else:
             pass
 
+    def update_history(self):
+        # Check if the current state is not already in the history
+        if len(self.history) == 0 or self.history[-1] != self.game_state:
+            self.history.append(self.game_state)
+
+    def get_history(self):
+        return self.history
+
     def is_my_turn(self):
         return self.player_number == (self.game_state['turn'] % 2) + 1
 
@@ -81,6 +91,10 @@ class Client():
                 print(game_map[y][x], end=' ')
             print('\n')
 
+    def save_game(self):
+        # TODO
+        print("[+] Saving the game...")
+
 
 # Create the client with a pseudo
 client = Client("MyBotName")
@@ -95,6 +109,7 @@ while client.is_connected():
 
     # Receive the state
     client.wait_state()
+    client.update_history()
 
     # Check if the game is over
     winner = client.get_winner()
@@ -119,5 +134,7 @@ while client.is_connected():
     # Otherwise, compute and send the order
     else:
         print("[?] Your order : ")
-        order = input()
+        order = compute_move(client.get_player_number(), client.get_history())
         client.send_message(order)
+
+client.save_game()
