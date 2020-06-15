@@ -20,8 +20,9 @@ class Client():
             self.ClientSocket.connect((self.host, self.port))
             self.conn_state = 1
             self.send_message(self.pseudo)
-        except socket.error as e:
-            print(str(e))
+        except:
+            print("[X] Unable to connect to the server :/")
+            exit()
         print("[+] Connected !")
 
     def disconnect(self):
@@ -82,8 +83,9 @@ class Client():
 
 
 # Create the client with a pseudo
-client = Client("Zeblood")
+client = Client("MyBotName")
 client.connect()
+
 
 while client.get_player_number() == 0:
     client.wait_player_number()
