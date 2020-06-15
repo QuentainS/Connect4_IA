@@ -97,7 +97,8 @@ class Client():
 
 
 # Create the client with a pseudo
-client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
+#client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
+client = Client("MyBotName")
 client.connect()
 
 
@@ -135,6 +136,6 @@ while client.is_connected():
     else:
         print("[?] Your order : ")
         order = compute_move(client.get_player_number(), client.get_history())
-        client.send_message(order)
+        client.send_message(str(order))
 
 client.save_game()

@@ -15,23 +15,22 @@ class Game():
         return (self.width, self.height, self.map)
 
     def set_disc(self, player, coord):
-        x = coord[0]
-        y = coord[1]
-        y = self.height - y - 1
+        x = coord
+        print("Set disc on x={}".format(x))
 
-        # Check if the case is empty
-        if self.map[y][x] != 0:
-            raise Exception("Case not empty")
-        elif x < 0 or x >= self.width:
+        if x < 0 or x >= self.width:
             raise Exception("Wrong index : x={} is not correct".format(x))
-        elif y < 0 or y >= self.height:
-            raise Exception("Wrong index : y={} is not correct".format(y))
 
-        # Check if the move is feasible
-        # (if the case below the target is not empty)
-        if y != (self.height - 1) and self.map[y+1][x] == 0:
-            raise Exception("Your disc can't levitate...")
+        # Compute the y
+        y = self.height - 1
+        while y >= 0 and self.map[y][x] != 0:
+            y -= 1
+        if y == -1:
+            raise Exception("Column already full")
 
+        print("y={}".format(y))
+
+        # Set the disc
         self.map[y][x] = player
 
         self.used_discs += 1

@@ -77,7 +77,7 @@ class Server():
         order = order.decode()
         print("[+] Order received from player {}: {}".format(current_player + 1, order))
 
-        pos = (int(order.split(' ')[0]), int(order.split(' ')[1]))
+        pos = int(order)
 
         # Try to apply the move
         try:
@@ -94,7 +94,7 @@ class Server():
 
 
 # Create the server an open the connection
-srv = Server(ip='192.168.1.100')
+srv = Server()
 srv.open()
 
 # Wait the two players
