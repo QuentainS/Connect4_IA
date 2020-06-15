@@ -32,12 +32,12 @@ class Server():
     def wait_a_player(self):
 
         # Wait the first player
-        print("Waiting for a player... {}/2".format(len(self.clients)))
+        print("[+] Waiting for a player... {}/2".format(len(self.clients)))
         client, address = self.ServerSocket.accept()
 
         # Get its pseudo
         pseudo = client.recv(1024).decode()
-        print('{} is connected from {}:{}'.format(
+        print('[!] {} is connected from {}:{}'.format(
             pseudo, address[0], address[1]))
 
         # Add it to the clients list
@@ -70,12 +70,12 @@ class Server():
         # Check the turn value of the match to know who have to play
         current_player = self.match.get_turn() % 2
 
-        print("Waiting order from player {} ({})".format(
-            current_player+1, self.clients[current_player]['pseudo']))
+        # print("Waiting order from player {} ({})".format(
+        #    current_player+1, self.clients[current_player]['pseudo']))
 
         order = self.clients[current_player]['conn'].recv(1024)
         order = order.decode()
-        print("Order received : {}".format(order))
+        print("[+] Order received from player {}: {}".format(current_player + 1, order))
 
         pos = (int(order.split(' ')[0]), int(order.split(' ')[1]))
 
@@ -90,7 +90,7 @@ class Server():
 
     def save_game(self):
         # TODO
-        print("Saving the game...")
+        print("[+] Saving the game...")
 
 
 # Create the server an open the connection
@@ -115,7 +115,7 @@ while not srv.match_finished():
         srv.wait_a_play()
     # In case of error, close the connection an send the error to the clients
     except Exception as e:
-        print("Error from player : {}".format(e))
+        print("[!] Error from player : {}".format(e))
         srv.err_close(e)
         break
 

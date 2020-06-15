@@ -130,13 +130,10 @@ class Match():
     def play(self, player, coord):
 
         if self.winner != 0:
-            print("Game is finished !")
+            raise Exception("Game already finished")
         elif (self.turn % 2) + 1 != player:
-            print("It is the turn of player {}!".format((self.turn % 2) + 1))
+            raise Exception("Bad player")
         else:
-
-            print("Player n°{} add a disc on {}".format(player, coord))
-
             # Add the disc
             try:
                 self.winner = self.game.set_disc(player, coord)

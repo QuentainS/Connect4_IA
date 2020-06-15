@@ -29,34 +29,33 @@ class Client():
 
     def wait_player_number(self):
 
-        print("Wait player number...")
+        print("[+] Wait the player number...")
 
         data = self.ClientSocket.recv(1024)
         data = data.decode()
 
         if "PLAYER" in data:
             self.player_number = int(data[6:])
-            print("I'm the player {}".format(self.player_number))
+            print("[+] Your are the player n°{}".format(self.player_number))
 
     def wait_state(self):
-        print("Getting the state...")
+        print("[+] Getting the state...")
 
         data = self.ClientSocket.recv(1024)
         data = data.decode()
 
         if "STATE" in data:
-            print("State received")
             state = data[5:]
             self.game_state = ast.literal_eval(state)
 
         elif "QUIT" in data:
-            print("Connection closed by the server")
+            print("[X] Connection closed by the server")
             self.conn_state = 0
 
         elif "ERR" in data:
             player = data[3]
             error = data[4:]
-            print("Player {} made an error : {}".format(player, error))
+            print("[X] Player {} made an error : {}".format(player, error))
             self.conn_state = 0
 
         else:
@@ -72,8 +71,14 @@ class Client():
         self.ClientSocket.sendall(message.encode())
 
     def get_winner(self):
-        print("Current winner : {}".format(self.game_state['winner']))
         return self.game_state['winner']
+
+    def show_game(self):
+        width, height, game_map = self.game_state['map']
+        for y in range(height):
+            for x in range(width):
+                print(game_map[y][x], end=' ')
+            print('\n')
 
 
 # Create the client with a pseudo
@@ -92,15 +97,18 @@ while client.is_connected():
     # Check if the game is over
     winner = client.get_winner()
     if winner != 0:
+        client.show_game()
         if winner == 0:
-            print("This is a tie !")
+            print("[+] This is a tie !")
         else:
-            print("Player {} won the game !".format(winner))
+            print("[+] Player {} won the game !".format(winner))
         break
 
     # If an error occured, we are disconnected
     if not client.is_connected():
         break
+
+    client.show_game()
 
     # If it's not my turn
     if not client.is_my_turn():
@@ -108,6 +116,6 @@ while client.is_connected():
 
     # Otherwise, compute and send the order
     else:
-        print("This my turn : ")
+        print("[?] Your order : ")
         order = input()
         client.send_message(order)
