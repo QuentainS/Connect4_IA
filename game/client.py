@@ -97,7 +97,7 @@ class Client():
 
 
 # Create the client with a pseudo
-client = Client("MyBotName", ip='192.168.1.100')
+client = Client("MyBotName", ip='127.0.0.1')
 client.connect()
 
 

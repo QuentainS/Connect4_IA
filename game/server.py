@@ -6,7 +6,7 @@ from connect4 import Match, Game
 
 
 class Server():
-    def __init__(self, ip='192.168.1.100', port=3545):
+    def __init__(self, ip='127.0.0.1', port=3545):
         self.ServerSocket = socket.socket()
         self.host = ip
         self.port = port
