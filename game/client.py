@@ -97,7 +97,7 @@ class Client():
 
 
 # Create the client with a pseudo
-client = Client("MyBotName", ip='127.0.0.1')
+client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
 client.connect()
 
 

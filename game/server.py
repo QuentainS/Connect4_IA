@@ -94,7 +94,7 @@ class Server():
 
 
 # Create the server an open the connection
-srv = Server()
+srv = Server(ip='192.168.1.100')
 srv.open()
 
 # Wait the two players
