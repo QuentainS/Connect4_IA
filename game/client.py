@@ -4,7 +4,7 @@ from bot import compute_move
 
 
 class Client():
-    def __init__(self, pseudo, ip='127.0.0.1', port=1233):
+    def __init__(self, pseudo, ip='127.0.0.1', port=3545):
         self.ClientSocket = socket.socket()
         self.host = ip
         self.port = port
@@ -97,7 +97,7 @@ class Client():
 
 
 # Create the client with a pseudo
-client = Client("MyBotName")
+client = Client("MyBotName", ip='192.168.1.100')
 client.connect()
 
 
