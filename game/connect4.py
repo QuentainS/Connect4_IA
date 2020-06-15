@@ -171,3 +171,6 @@ class Match():
             for x in range(width):
                 print(game_map[y][x], end=' ')
             print('\n')
+
+    def is_finished(self):
+        return self.winner != 0

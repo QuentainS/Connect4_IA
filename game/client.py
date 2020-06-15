@@ -53,6 +53,12 @@ class Client():
             print("Connection closed by the server")
             self.conn_state = 0
 
+        elif "ERR" in data:
+            player = data[3]
+            error = data[4:]
+            print("Player {} made an error : {}".format(player, error))
+            self.conn_state = 0
+
         else:
             pass
 
@@ -64,6 +70,10 @@ class Client():
 
     def send_message(self, message):
         self.ClientSocket.sendall(message.encode())
+
+    def get_winner(self):
+        print("Current winner : {}".format(self.game_state['winner']))
+        return self.game_state['winner']
 
 
 # Create the client with a pseudo
@@ -79,12 +89,25 @@ while client.is_connected():
     # Receive the state
     client.wait_state()
 
+    # Check if the game is over
+    winner = client.get_winner()
+    if winner != 0:
+        if winner == 0:
+            print("This is a tie !")
+        else:
+            print("Player {} won the game !".format(winner))
+        break
+
+    # If an error occured, we are disconnected
+    if not client.is_connected():
+        break
+
     # If it's not my turn
     if not client.is_my_turn():
         pass
 
     # Otherwise, compute and send the order
     else:
-        print("This my turn !")
-        order = "myorder"
+        print("This my turn : ")
+        order = input()
         client.send_message(order)

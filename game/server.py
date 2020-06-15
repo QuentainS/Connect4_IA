@@ -23,6 +23,12 @@ class Server():
         srv.send_to_clients("QUIT")
         self.ServerSocket.close()
 
+    def err_close(self, error):
+        # Send the error and the player who did it
+        current_player = (self.match.get_turn() % 2) + 1
+        srv.send_to_clients("ERR{}{}".format(current_player, error))
+        self.ServerSocket.close()
+
     def wait_a_player(self):
 
         # Wait the first player
@@ -70,7 +76,21 @@ class Server():
         order = self.clients[current_player]['conn'].recv(1024)
         order = order.decode()
         print("Order received : {}".format(order))
-        time.sleep(1)
+
+        pos = (int(order.split(' ')[0]), int(order.split(' ')[1]))
+
+        # Try to apply the move
+        try:
+            self.match.play(current_player+1, pos)
+        except Exception as e:
+            raise e
+
+    def match_finished(self):
+        return self.match.is_finished()
+
+    def save_game(self):
+        # TODO
+        print("Saving the game...")
 
 
 # Create the server an open the connection
@@ -85,8 +105,25 @@ srv.wait_a_player()
 srv.init_match()
 
 # Send the current state and wait for a play
-while True:
-    srv.send_state()
-    srv.wait_a_play()
+while not srv.match_finished():
 
-srv.close()
+    # Sending the current state to each clients
+    srv.send_state()
+
+    # Get the order an play it
+    try:
+        srv.wait_a_play()
+    # In case of error, close the connection an send the error to the clients
+    except Exception as e:
+        print("Error from player : {}".format(e))
+        srv.err_close(e)
+        break
+
+# If no error
+if srv.match_finished():
+    # Send the last state
+    srv.send_state()
+    # Close the connection
+    srv.close()
+    # Save the game
+    srv.save_game()
