@@ -5,8 +5,8 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "react": "16.5.2",
-    "react-dom": "16.5.2",
+    "react": "next",
+    "react-dom": "next",
     "react-scripts": "^3.4.1"
   },
   "devDependencies": {},
