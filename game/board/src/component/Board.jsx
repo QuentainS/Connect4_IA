@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import socketIOClient from "socket.io-client"
-import Modal from './Modal'
+import Modal from './Connection'
 import './Board.css'
 
 export default function Board() {
@@ -15,15 +15,17 @@ export default function Board() {
   // Socket connection information 
   // If none specified within .env 
   // Ask them
+
   const [remote, setRemote] = useState('')
   const [socket, setSocket] = useState(socketIOClient(remote))
   const [showModal, setShowModal] = useState(!socket.connected)
 
   const setSocketConnection = () => {
-    console.log(socket._connectTimer)
-    setSocket(socketIOClient(remote))
-    //socket.on("game_state", gameState => console.log(gameState)); //FIXME - rename event
-    //socket.on("new_turn", newTurn => console.log(newTurn)); //FIXME - rename event
+    const socket = socketIOClient(remote)
+
+    socket.on("PLAYER", gameState => console.log(gameState)); //FIXME - rename event
+    socket.on("HISTORY", newTurn => console.log(newTurn)); //FIXME - rename event
+    setSocket(socket)
   }
 
   const handleSave = (uri, port) => {
@@ -63,9 +65,6 @@ export default function Board() {
   useEffect(() => {
     setSocketConnection()
     if (!socket.connected) {
-
-      // TODO - Show could not interact with server message to user on page
-
       console.error('Could not establish connection with the servor')
     } else {
       setShowModal(false)
@@ -81,7 +80,7 @@ export default function Board() {
       </div>
       <Modal
         show={showModal}
-        connEstablished={socket.connected}
+        message={!socket.connected ? 'Could not connect' : '' }
         callback={handleSave} />
     </>
   )

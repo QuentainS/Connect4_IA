@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
-import './Modal.css'
+import './Connection.css'
 
-export default function Modal({ show, connEstablished, callback }) {
+export default function Modal({ show, message, callback }) {
   const uriRef = useRef(null)
   const portRef = useRef(null)
   const [display, setDisplay] = useState(show ? 'block' : 'none')
@@ -30,9 +30,7 @@ export default function Modal({ show, connEstablished, callback }) {
           </div>
           <div className='footer'>
             <hr />
-            {
-              connEstablished ? <></> : <b>Could not connect !</b>
-            }
+            <b>{message} </b>
             <button
               onClick={() => {
                 callback(uriRef.current.value, portRef.current.value)
