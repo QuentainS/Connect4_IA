@@ -21,8 +21,8 @@ class BoardThread(threading.Thread):
         try:
             print("[+] Board connection ...")
             client, address = self.conn.accept()
-            print("[+] Board connected !")
-            self.srv.set_board_connection(True)
+            print("[+] Board connected ! ({})".format(address))
+            self.srv.set_board_conn(client)
         except:
             print("[X] Board connection crashed")
 
@@ -35,10 +35,21 @@ class Server():
         self.clients = []
         self.history = []
         self.board = socket.socket()
-        self.board_connected = False
+        self.board_conn = None
 
-    def set_board_connection(self, value):
-        self.board_connected = value
+    def send_to_board(self, message):
+        print("BOARD DEBUG : {}".format(message))  # TODO remove that
+        self.board_conn.sendall(message.encode())
+
+    def set_board_conn(self, conn):
+        self.board_conn = conn
+
+        # Send the player numbers / names
+        players = [self.clients[0]['pseudo'], self.clients[1]['pseudo']]
+        self.send_to_board("PLAYER{}".format(players))
+
+        # Send the history
+        self.send_to_board("HISTORY{}".format(self.history))
 
     def board_open(self, ip='127.0.0.1', port=3546):
         try:
@@ -100,9 +111,10 @@ class Server():
 
         self.send_to_clients(state)
 
-        if self.board_connected:
-            print('Sending state to the board')
-            # TODO
+        if self.board_conn is not None:
+            print('[+] Sending state to the board')
+            # Send the current state
+            self.send_to_board("STATE{}".format(self.match.get_state()))
 
     def send_to_clients(self, message):
         for client in self.clients:

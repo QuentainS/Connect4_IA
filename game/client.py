@@ -40,7 +40,6 @@ class Client():
         data = data.decode()
 
         if "PLAYER" in data:
-            print("DATA : {}".format(data))
             self.player_number = int(data[6:])
             print("[+] Your are the player n°{}".format(self.player_number))
 
@@ -103,6 +102,7 @@ class Client():
         pickle.dump(self.history, open(name_file, "wb"))
         print("[+] Game saved to {}".format(name_file))
 
+
 if __name__ == "__main__":
     # Create the client with a pseudo
     #client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
@@ -142,7 +142,8 @@ if __name__ == "__main__":
         # Otherwise, compute and send the order
         else:
             print("[?] Your order : ")
-            order = compute_move(client.get_player_number(), client.get_history())
+            order = compute_move(
+                client.get_player_number(), client.get_history())
             client.send_message(str(order))
 
     client.save_game()
