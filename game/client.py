@@ -95,47 +95,46 @@ class Client():
         # TODO
         print("[+] Saving the game...")
 
+if __name__ == "__main__":
+    # Create the client with a pseudo
+    #client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
+    client = Client("MyBotName")
+    client.connect()
 
-# Create the client with a pseudo
-#client = Client("MyBotName", ip=socket.gethostbyname('zeblood.ddns.net'))
-client = Client("MyBotName")
-client.connect()
+    while client.get_player_number() == 0:
+        client.wait_player_number()
 
+    # While the client if connected
+    while client.is_connected():
 
-while client.get_player_number() == 0:
-    client.wait_player_number()
+        # Receive the state
+        client.wait_state()
+        client.update_history()
 
-# While the client if connected
-while client.is_connected():
+        # Check if the game is over
+        winner = client.get_winner()
+        if winner != 0:
+            client.show_game()
+            if winner == 0:
+                print("[+] This is a tie !")
+            else:
+                print("[+] Player {} won the game !".format(winner))
+            break
 
-    # Receive the state
-    client.wait_state()
-    client.update_history()
+        # If an error occured, we are disconnected
+        if not client.is_connected():
+            break
 
-    # Check if the game is over
-    winner = client.get_winner()
-    if winner != 0:
         client.show_game()
-        if winner == 0:
-            print("[+] This is a tie !")
+
+        # If it's not my turn
+        if not client.is_my_turn():
+            pass
+
+        # Otherwise, compute and send the order
         else:
-            print("[+] Player {} won the game !".format(winner))
-        break
+            print("[?] Your order : ")
+            order = compute_move(client.get_player_number(), client.get_history())
+            client.send_message(str(order))
 
-    # If an error occured, we are disconnected
-    if not client.is_connected():
-        break
-
-    client.show_game()
-
-    # If it's not my turn
-    if not client.is_my_turn():
-        pass
-
-    # Otherwise, compute and send the order
-    else:
-        print("[?] Your order : ")
-        order = compute_move(client.get_player_number(), client.get_history())
-        client.send_message(str(order))
-
-client.save_game()
+    client.save_game()

@@ -92,38 +92,38 @@ class Server():
         # TODO
         print("[+] Saving the game...")
 
+if __name__ == "__main__":
+    # Create the server an open the connection
+    srv = Server()
+    srv.open()
 
-# Create the server an open the connection
-srv = Server()
-srv.open()
+    # Wait the two players
+    srv.wait_a_player()
+    srv.wait_a_player()
 
-# Wait the two players
-srv.wait_a_player()
-srv.wait_a_player()
+    # Create the match and define the player order
+    srv.init_match()
 
-# Create the match and define the player order
-srv.init_match()
+    # Send the current state and wait for a play
+    while not srv.match_finished():
 
-# Send the current state and wait for a play
-while not srv.match_finished():
+        # Sending the current state to each clients
+        srv.send_state()
 
-    # Sending the current state to each clients
-    srv.send_state()
+        # Get the order an play it
+        try:
+            srv.wait_a_play()
+        # In case of error, close the connection an send the error to the clients
+        except Exception as e:
+            print("[!] Error from player : {}".format(e))
+            srv.err_close(e)
+            break
 
-    # Get the order an play it
-    try:
-        srv.wait_a_play()
-    # In case of error, close the connection an send the error to the clients
-    except Exception as e:
-        print("[!] Error from player : {}".format(e))
-        srv.err_close(e)
-        break
-
-# If no error
-if srv.match_finished():
-    # Send the last state
-    srv.send_state()
-    # Close the connection
-    srv.close()
-    # Save the game
-    srv.save_game()
+    # If no error
+    if srv.match_finished():
+        # Send the last state
+        srv.send_state()
+        # Close the connection
+        srv.close()
+        # Save the game
+        srv.save_game()
