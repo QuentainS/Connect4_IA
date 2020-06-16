@@ -6,6 +6,7 @@ from connect4 import Match, Game
 from datetime import datetime
 import pickle
 import threading
+import os
 
 
 class BoardThread(threading.Thread):
@@ -146,6 +147,9 @@ class Server():
         return self.match.is_finished()
 
     def save_game(self):
+        if not os.path.exists("save"):
+            print('creating folder')
+            os.makedirs("save")
         name_file = datetime.now().strftime('save/server_%H_%M_%S_%d_%m_%Y.pkl')
         pickle.dump(self.history, open(name_file, "wb"))
         print("[+] Game saved to {}".format(name_file))
