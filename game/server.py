@@ -24,8 +24,9 @@ class BoardThread(threading.Thread):
             client, address = self.conn.accept()
             print("[+] Board connected ! ({})".format(address))
             self.srv.set_board_conn(client)
-        except:
-            print("[X] Board connection crashed")
+        except Exception as e:
+            print("[X] Board connection crashed : ")
+            print(e)
 
 
 class Server():
@@ -46,7 +47,11 @@ class Server():
         self.board_conn = conn
 
         # Send the player numbers / names
-        players = [self.clients[0]['pseudo'], self.clients[1]['pseudo']]
+        if self.clients :
+            players = [self.clients[0]['pseudo'], self.clients[1]['pseudo']]
+        else :
+            players = []    
+        
         self.send_to_board("PLAYER{}".format(players))
 
         # Send the history
