@@ -5,6 +5,26 @@ import time
 from connect4 import Match, Game
 from datetime import datetime
 import pickle
+import threading
+
+
+class BoardThread(threading.Thread):
+    """ This thread handle the board connection """
+    # If a board client connects, notify the server
+
+    def __init__(self, conn, srv):
+        threading.Thread.__init__(self)
+        self.conn = conn
+        self.srv = srv
+
+    def run(self):
+        try:
+            print("[+] Board connection ...")
+            client, address = self.conn.accept()
+            print("[+] Board connected !")
+            self.srv.set_board_connection(True)
+        except:
+            print("[X] Board connection crashed")
 
 
 class Server():
@@ -14,8 +34,24 @@ class Server():
         self.port = port
         self.clients = []
         self.history = []
+        self.board = socket.socket()
+        self.board_connected = False
 
-    def open(self):
+    def set_board_connection(self, value):
+        self.board_connected = value
+
+    def board_open(self, ip='127.0.0.1', port=3546):
+        try:
+            self.board.bind((ip, port))
+        except socket.error as e:
+            print(str(e))
+        self.board.listen(5)
+        self.board_thread = BoardThread(self.board, self)
+        # Define the thread as a deamon
+        self.board_thread.daemon = True
+        self.board_thread.start()
+
+    def server_open(self):
         try:
             self.ServerSocket.bind((self.host, self.port))
         except socket.error as e:
@@ -64,6 +100,10 @@ class Server():
 
         self.send_to_clients(state)
 
+        if self.board_connected:
+            print('Sending state to the board')
+            # TODO
+
     def send_to_clients(self, message):
         for client in self.clients:
             client['conn'].sendall(message.encode())
@@ -98,10 +138,12 @@ class Server():
         pickle.dump(self.history, open(name_file, "wb"))
         print("[+] Game saved to {}".format(name_file))
 
+
 if __name__ == "__main__":
     # Create the server an open the connection
     srv = Server()
-    srv.open()
+    srv.server_open()
+    srv.board_open()
 
     # Wait the two players
     srv.wait_a_player()
