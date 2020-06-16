@@ -23,3 +23,24 @@
   text-align: end;
 }
 
+button {
+  padding: .5em;
+  width: fit-content;
+  height: auto;
+  border-radius: 5px;
+  border: transparent;
+  background-color: var(--board-color);
+  cursor: pointer;
+}
+
+button:active {
+  box-shadow: inset 0 0 5px #000000;
+}
+
+input {
+  padding: .5em;
+  width: fit-content;
+  height: auto;
+  border-radius: 5px;
+  border: transparent;
+}
