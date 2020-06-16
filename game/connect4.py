@@ -16,7 +16,6 @@ class Game():
 
     def set_disc(self, player, coord):
         x = coord
-        print("Set disc on x={}".format(x))
 
         if x < 0 or x >= self.width:
             raise Exception("Wrong index : x={} is not correct".format(x))
@@ -27,8 +26,6 @@ class Game():
             y -= 1
         if y == -1:
             raise Exception("Column already full")
-
-        print("y={}".format(y))
 
         # Set the disc
         self.map[y][x] = player

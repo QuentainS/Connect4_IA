@@ -3,6 +3,8 @@ import os
 import random
 import time
 from connect4 import Match, Game
+from datetime import datetime
+import pickle
 
 
 class Server():
@@ -11,6 +13,7 @@ class Server():
         self.host = ip
         self.port = port
         self.clients = []
+        self.history = []
 
     def open(self):
         try:
@@ -85,12 +88,15 @@ class Server():
         except Exception as e:
             raise e
 
+        self.history.append(self.match.get_state())
+
     def match_finished(self):
         return self.match.is_finished()
 
     def save_game(self):
-        # TODO
-        print("[+] Saving the game...")
+        name_file = datetime.now().strftime('save/server_%H_%M_%S_%d_%m_%Y.pkl')
+        pickle.dump(self.history, open(name_file, "wb"))
+        print("[+] Game saved to {}".format(name_file))
 
 if __name__ == "__main__":
     # Create the server an open the connection
@@ -104,6 +110,7 @@ if __name__ == "__main__":
     # Create the match and define the player order
     srv.init_match()
 
+    time.sleep(1)
     # Send the current state and wait for a play
     while not srv.match_finished():
 
@@ -126,4 +133,4 @@ if __name__ == "__main__":
         # Close the connection
         srv.close()
         # Save the game
-        srv.save_game()
+    srv.save_game()

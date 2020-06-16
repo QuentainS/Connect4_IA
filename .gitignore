@@ -125,6 +125,7 @@ dmypy.json
 
 *.pkl
 .vscode/
+game/save/*
 
 # javascript dependencies 
 game/board/node_modules/*

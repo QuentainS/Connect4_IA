@@ -1,6 +1,8 @@
 import socket
 import ast
 from bot import compute_move
+from datetime import datetime
+import pickle
 
 
 class Client():
@@ -38,6 +40,7 @@ class Client():
         data = data.decode()
 
         if "PLAYER" in data:
+            print("DATA : {}".format(data))
             self.player_number = int(data[6:])
             print("[+] Your are the player n°{}".format(self.player_number))
 
@@ -91,9 +94,14 @@ class Client():
                 print(game_map[y][x], end=' ')
             print('\n')
 
+    def get_pseudo(self):
+        return self.pseudo
+
     def save_game(self):
-        # TODO
-        print("[+] Saving the game...")
+        name_file = datetime.now().strftime(
+            'save/{}_%H_%M_%S_%d_%m_%Y.pkl'.format(self.get_pseudo()))
+        pickle.dump(self.history, open(name_file, "wb"))
+        print("[+] Game saved to {}".format(name_file))
 
 if __name__ == "__main__":
     # Create the client with a pseudo
