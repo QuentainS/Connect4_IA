@@ -1,0 +1,45 @@
+#root {
+  --board-color: blue;
+  --player-1-color: red;
+  --player-2-color: yellow;
+}
+
+#title {
+  width: fit-content;
+  height: auto;
+  margin: 0 auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+#board-container {
+  width: fit-content;
+  height: auto;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.board {
+  width: fit-content;
+  height: auto;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(7, 75px);
+  background-color: var(--board-color);
+  border: 10px solid var(--board-color);
+}
+
+.box {
+  width: 75px;
+  height: 75px;
+  border-radius: 100px;
+  background-color: white;
+}
+
+.player-1 {
+  background-color: var(--player-1-color) !important;
+}
+
+.player-2 {
+  background-color: var(--player-2-color) !important;
+}
