@@ -17,12 +17,11 @@ export default function Board() {
   // Ask them
 
   const [remote, setRemote] = useState('')
-  const [socket, setSocket] = useState(socketIOClient(remote))
+  const [socket, setSocket] = useState({"connected":false})
   const [showModal, setShowModal] = useState(!socket.connected)
 
   const setSocketConnection = () => {
     const socket = socketIOClient(remote)
-
     socket.on("PLAYER", gameState => console.log(gameState)); //FIXME - rename event
     socket.on("HISTORY", newTurn => console.log(newTurn)); //FIXME - rename event
     setSocket(socket)
@@ -34,8 +33,8 @@ export default function Board() {
     // If the connection is properly established, 
     // The modal will be closed
     console.log(socket)
-
     console.log(`http://${uri}:${port}`)
+    
     setRemote(`http://${uri}:${port}`)
   }
 
@@ -53,23 +52,20 @@ export default function Board() {
     }
     setBoard([...rows])
 
-    // Socket connection
-
-    if (remote.length === 0) {
-      console.log("coucou")
-    } else {
-      setSocketConnection(remote)
-    }
   }, [])
 
   useEffect(() => {
-    setSocketConnection()
-    if (!socket.connected) {
-      console.error('Could not establish connection with the servor')
-    } else {
-      setShowModal(false)
-    }
+    if (remote.length > 0) setSocketConnection()
   }, [remote])
+
+  useEffect(() => {
+    if (socket.connected) {
+      setShowModal(false)
+    } 
+    else {
+      console.error('Could not establish connection with the server')
+    }
+  }, [socket.connected])
 
   return (
     <>
