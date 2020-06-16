@@ -3,6 +3,7 @@ import ast
 from bot import compute_move
 from datetime import datetime
 import pickle
+import os
 
 
 class Client():
@@ -40,7 +41,6 @@ class Client():
         data = data.decode()
 
         if "PLAYER" in data:
-            print("DATA : {}".format(data))
             self.player_number = int(data[6:])
             print("[+] Your are the player n°{}".format(self.player_number))
 
@@ -98,10 +98,13 @@ class Client():
         return self.pseudo
 
     def save_game(self):
+        if not os.path.exists("save"):
+            os.makedirs("save")
         name_file = datetime.now().strftime(
             'save/{}_%H_%M_%S_%d_%m_%Y.pkl'.format(self.get_pseudo()))
         pickle.dump(self.history, open(name_file, "wb"))
         print("[+] Game saved to {}".format(name_file))
+
 
 if __name__ == "__main__":
     # Create the client with a pseudo
@@ -127,6 +130,8 @@ if __name__ == "__main__":
                 print("[+] This is a tie !")
             else:
                 print("[+] Player {} won the game !".format(winner))
+
+            client.save_game()
             break
 
         # If an error occured, we are disconnected
@@ -142,7 +147,6 @@ if __name__ == "__main__":
         # Otherwise, compute and send the order
         else:
             print("[?] Your order : ")
-            order = compute_move(client.get_player_number(), client.get_history())
+            order = compute_move(
+                client.get_player_number(), client.get_history())
             client.send_message(str(order))
-
-    client.save_game()
