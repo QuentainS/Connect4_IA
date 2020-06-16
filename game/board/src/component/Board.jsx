@@ -18,7 +18,7 @@ export default function Board() {
 
   const [remote, setRemote] = useState('')
   const [socket, setSocket] = useState({"connected":false})
-  const [showModal, setShowModal] = useState(!socket.connected)
+  const [showModal, setShowModal] = useState(false)
 
   const setSocketConnection = () => {
     const socket = socketIOClient(remote)

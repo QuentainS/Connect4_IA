@@ -1,36 +1,59 @@
 /* CSS app wide variables */
-#root {
+[darkmode='false'] {
   --background-color: #ffffff;
   --foreground-color: #ebebeb;
   --text: #3d3d3d;
-  --board-color: #3587a4;
+  --board-color: #3C91E6;
+  --player-1-color: #e43f6f;
+  --player-2-color: #f19143;
+}
+
+[darkmode='true'] {
+  --background-color: #232020;
+  --foreground-color: #4A4545;
+  --text: #ebebeb;
+  --board-color: #3C91E6;
   --player-1-color: #e43f6f;
   --player-2-color: #f19143;
 }
 
 /*body and code fonts*/
-body {
-  margin: 0;
+html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--text);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.app {
+  
+  width: 100%;
+  min-height: 100%;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: var(--background-color);
+  transition-duration: .3s;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+  margin-bottom: 1000px;
+}
+
 #title {
   min-width: fit-content;
   max-width: 20vw;
-  height: auto;
-  margin: 0 auto;
+  margin: auto auto 1em auto;
   padding: 1em;
+  color: var(--text);
   text-align: center;
-  margin-top: 100px;
-  margin-bottom: 100px;
   border-radius: 5px;
   background-color: var(--foreground-color);
 }
@@ -39,8 +62,32 @@ code {
   min-width: fit-content;
   max-width: 50vw;
   height: fit-content;
-  margin: 0 auto;
+  margin: auto auto 3em auto;
   padding: 1.5em;
   border-radius: 5px;
   background-color: var(--foreground-color);
 }
+
+#theme-btn {
+  position: absolute;
+  cursor: pointer;
+  width: 2.5em;
+  height: 2.5em;
+  transform: translate(150%, 15%);
+  margin: 0 auto;
+  border-radius: 20em;
+  background-color: var(--foreground-color);
+  border: 1px solid var(--text);
+}
+
+#theme-btn::before {
+  content: "";
+  position: absolute;
+  width: 2.2em;
+  height: 2.3em;
+  border-radius: 200em;
+  transform: translate(13px, 2px);
+  background-color:transparent;
+  border-left: 1px solid var(--text);
+  z-index: 1;
+  }
