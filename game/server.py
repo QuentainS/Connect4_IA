@@ -47,11 +47,11 @@ class Server():
         self.board_conn = conn
 
         # Send the player numbers / names
-        if self.clients :
+        if self.clients:
             players = [self.clients[0]['pseudo'], self.clients[1]['pseudo']]
-        else :
-            players = []    
-        
+        else:
+            players = []
+
         self.send_to_board("PLAYER{}".format(players))
 
         # Send the history
@@ -110,6 +110,11 @@ class Server():
         # Announce the player order to each one
         self.clients[0]['conn'].sendall("PLAYER1".encode())
         self.clients[1]['conn'].sendall("PLAYER2".encode())
+
+        # Send the player to the board
+        if self.board_conn is not None:
+            players = [self.clients[0]['pseudo'], self.clients[1]['pseudo']]
+            self.send_to_board("PLAYER{}".format(players))
 
     def send_state(self):
         state = "STATE"
