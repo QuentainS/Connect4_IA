@@ -1,3 +1,4 @@
+/* CSS app wide variables */
 #root {
   --background-color: #ffffff;
   --foreground-color: #ebebebc2;
@@ -7,6 +8,7 @@
   --player-2-color: #f19143;
 }
 
+/*body and code fonts*/
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
@@ -41,31 +43,4 @@ code {
   padding: 1.5em;
   border-radius: 5px;
   background-color: var(--foreground-color);
-}
-
-.board {
-  margin: 0 auto;
-  width: fit-content;
-  height: auto;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(7, 75px);
-  background-color: var(--board-color);
-  border: 10px solid var(--board-color);
-  border-radius: 5px;
-}
-
-.box {
-  width: 75px;
-  height: 75px;
-  border-radius: 100px;
-  background-color: var(--foreground-color);
-}
-
-.player-1 {
-  background-color: var(--player-1-color) !important;
-}
-
-.player-2 {
-  background-color: var(--player-2-color) !important;
 }

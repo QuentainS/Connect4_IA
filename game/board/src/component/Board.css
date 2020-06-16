@@ -1,0 +1,27 @@
+.board {
+    margin: 0 auto;
+    width: fit-content;
+    height: auto;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(7, 75px);
+    background-color: var(--board-color);
+    border: 10px solid var(--board-color);
+    border-radius: 5px;
+  }
+  
+  .box {
+    width: 75px;
+    height: 75px;
+    border-radius: 100px;
+    background-color: var(--foreground-color);
+  }
+  
+  .player-1 {
+    background-color: var(--player-1-color) !important;
+  }
+  
+  .player-2 {
+    background-color: var(--player-2-color) !important;
+  }
+  
