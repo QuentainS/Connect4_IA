@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <div id='title'>
-        <b>Contact 4 board game</b>
+        <b>Connect 4 board game</b>
       </div >
       <div id='board-container'>
         <Board />
