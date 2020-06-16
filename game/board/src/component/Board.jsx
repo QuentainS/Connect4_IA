@@ -63,9 +63,9 @@ export default function Board() {
       setShowModal(false)
     } 
     else {
-      console.error('Could not establish connection with the server')
+      console.warn('Could not establish connection with the server')
     }
-  }, [socket.connected])
+  }, [socket])
 
   return (
     <>
